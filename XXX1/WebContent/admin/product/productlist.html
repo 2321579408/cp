@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="../js/jquery-3.3.1.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="../js/css/layui.css">
+		<script type="text/javascript" src="../js/layui.js"></script>
+		<script>
+		
+		layui.use('upload', function(){
+			  var $ = layui.jquery
+			  ,upload = layui.upload;
+			  
+			  //普通图片上传
+			  var uploadInst = upload.render({
+			    elem: '#test1'
+			    ,type:'post'
+			    ,url: '../../productList' //改成您自己的上传接口
+			    ,before: function(obj){
+			      //预读本地文件示例，不支持ie8
+			      obj.preview(function(index, file, result){
+			        $('#demo1').attr('src', result); //图片链接（base64）
+			      });
+			    }
+			    ,done: function(res){
+			      //如果上传失败
+			      if(res.code > 0){
+			        return layer.msg('上传失败');
+			        
+			      }else{
+			    	  $("#upimg1").val(res.data);
+			      }
+			      //上传成功
+			    }
+			    ,error: function(){
+			      //演示失败状态，并实现重传
+			      var demoText = $('#demoText');
+			      demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+			      demoText.find('.demo-reload').on('click', function(){
+			        uploadInst.upload();
+			      });
+			    }
+			  });
+			  
+			  
+			});
+		
+			layui.use('table', function(){
+			  var table = layui.table;
+			  
+			  table.render({
+			    elem: '#demo'
+			    ,url: '../../productList' //数据接口
+			    ,page: true //开启分页
+			    ,cols: [[ //表头
+			      {field: 'id', title: 'ID', width:150, sort: true, fixed: 'left'}
+			      ,{field: 'pname', title: '产品名称', width:150}
+			      ,{field: '', title: '图片', width:150,templet:'<div><img src="../../../proimg/{{ d.pimg}}"></div>'}
+			      ,{field: 'price', title: '产品的价格', width:150}
+			      ,{field: 'ptitle', title: '产品的标题', width:150}
+			      ,{field: 'pv', title: '产品访问的次数', width:150}
+			      ,{field: 'biaoqian', title: '产品标签', width:150}
+			      ,{field: 'typeid', title: '产品对应的类别', width:150}
+			      ,{field: 'barDemo', title: '操作', width:150,toolbar: '#barDemo'}
+			    ]]
+			  });
+			});
+			$(function(){
+				$("#edit").click(function(){
+					$.post({
+						url:"../../productList",
+						data: $("#editform").serialize(),
+						dataType:"json",
+						success:function(data){	
+							alert(123);
+							var code = data.code;
+							if(code=='200'){
+								location.href = "productlist.html";
+							}
+							
+						}
+						
+					});
+				});
+			});
+			
+
+			layui.use(['form', 'layedit', 'laydate'], function(){
+				  var form = layui.form
+				  var biaoqian="";
+				  form.on('select(level1)', function(data){ 
+					  biaoqian=data.elem[data.elem.selectedIndex].text;
+					  $.post({
+							url:"../../productList",
+							data:"op=two&parentid="+data.value,
+							dataType:"json",
+							success:function(da){
+								$("#level2").html("<option>--二级标题--</option>");
+								for(var i in da){
+									var p = da[i];
+									var n = p.title;
+									var $op = $("<option value="+p.id+">"+n+"</option>");
+									$("#level2").append($op);
+								}
+								
+								layui.use(['element','form'], function() {
+							           var element = layui.element;
+							           element.init();
+							           var form = layui.form;
+							           form.render();
+							          });
+							}
+					});
+				});
+				  
+				  
+				  form.on('select(level2)', function(data){ 
+					  biaoqian +=">"+ data.elem[data.elem.selectedIndex].text;
+					  $.post({
+							url:"../../productList",
+							data:"op=three&parentid="+data.value,
+							dataType:"json",
+							success:function(da){
+								$("#level3").html("<option>--三级标题--</option>");
+								for(var i in da){
+									var p = da[i];
+									var n = p.title;
+									var $op = $("<option value="+p.id+">"+n+"</option>");
+									$("#level3").append($op);
+								}
+								
+								layui.use(['element','form'], function() {
+							           var element = layui.element;
+							           element.init();
+							           var form = layui.form;
+							           form.render();
+							          });
+							}
+					});
+				});
+				  
+				  form.on('select(level3)', function(ooo){ 
+						$("#typeid").val(ooo.value);
+						
+						
+						biaoqian +=">"+ ooo.elem[ooo.elem.selectedIndex].text;
+						$("#biaoqian").val(biaoqian);
+						
+						   	
+					 });
+				  
+			});	  
+			$(function(){
+				$.post({
+					url:"../../productList",
+					data:"op=one",
+					dataType:"json",
+					success:function(data){
+						for(var i in data){
+							var p = data[i];
+							var n = p.title;
+							var $op = $("<option value="+p.id+">"+n+"</option>");
+							$("#level1").append($op);
+
+						}
+						
+						layui.use('element', function() {
+					           var element = layui.element;
+					           element.init();
+					          });
+						
+						layui.use('form', function() {
+					           var form = layui.form;
+					           form.render();
+					          });
+					}
+				});
+			});
+
+
+	</script>
+</head>
+<body>
+	<table id="demo" lay-filter="test"></table>
+	
+	<form style="display:none" id="editform" lay-filter="formTest" class="layui-form layui-form-pane" >
+		  <input type="hidden" name="op" value="edit">
+		  <input type="hidden" id="id" name="id" >
+		  <div class="layui-form-item">
+		    <label class="layui-form-label">产品名称</label>
+		    <div class="layui-input-inline">
+		      <input type="text" name="pname" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+		    </div>
+		  </div>
+		  
+		  <div class="layui-form-item">
+		    <label class="layui-form-label">产品价格</label>
+		    <div class="layui-input-inline">
+		      <input type="text" name="price" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+		    </div>
+		  </div>
+		  
+		  <div class="layui-form-item">
+		    <label class="layui-form-label">产品标题</label>
+		    <div class="layui-input-inline">
+		      <input type="text" name="ptitle" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+		    </div>
+		  </div>
+		  
+		  <div class="layui-form-item">
+		    <label class="layui-form-label">产品类别</label>
+		    <div class="layui-input-inline">
+		      <input type="text" id="typeid" name="typeid" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+		    </div>
+		  </div>
+		  
+		  <div class="layui-form-item">
+	    <label class="layui-form-label">产品标签</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="biaoqian" name="biaoqian" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+	    </div>
+  </div>
+		  
+		  <div class="layui-form-item">
+		    <label class="layui-form-label">产品访问次数</label>
+		    <div class="layui-input-inline">
+		      <input type="text" name="pv" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+		    </div>
+		  </div>
+		  
+		  <div class="layui-form-item">
+  <label class="layui-form-label">产品级别选择</label>
+    <div class="layui-input-inline">
+      <select id="level1" lay-filter="level1"  name="quiz1">
+        <option>--一级标题--</option>
+      </select>
+    </div><br>
+    <div class="layui-input-inline">
+      <select id="level2" lay-filter="level2" name="quiz2" >
+        <option>--二级标题--</option>
+      </select><br>
+    </div><br>
+    <div class="layui-input-inline">
+      <select id="level3" lay-filter="level3" name="quiz3">
+        <option>--三级标题--</option>
+      </select>
+    </div>
+  </div>
+  
+		  
+		  <div class="layui-upload">
+			  <button type="button" class="layui-btn" id="test1">上传图片</button>
+			   <input id="upimg1" type="text" name="nfile" value="">
+			  <div class="layui-upload-list">
+			    <img class="layui-upload-img" id="demo1">
+			    <p id="demoText"></p>
+			  </div>	
+		 </div>
+		  
+		  <div class="layui-form-item">
+		    <button id="edit" class="layui-btn" lay-submit="" lay-filter="demo2">修改</button>
+		  </div>
+		</form>
+	
+	<script type="text/html" id="barDemo">
+	<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</ a>
+	<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</ a>
+	</script>
+	
+	<script type="text/javascript">
+		/* 以下js代码使用layui的js来实现编辑和删除的功能 */
+		layui.use(['table','form'], function(){
+			  var table = layui.table;
+			  var form = layui.form;
+			  var $ = layui.$;
+			  table.on('tool(test)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+			      var data = obj.data; //获得当前行数据
+			      var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+			      var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+			      if(layEvent === 'del'){ //删除
+			            layer.confirm('真的删除ID为：'+data.id+"的用户吗?", function(index){
+			            
+			                    $.ajax({
+			                        url:'../../productList',
+			                        type:'get',
+			                        data:{'id':data.id,'op':"del"},//向服务端发送删除的id
+			                        dataType:'json',
+			                        success:function(data){
+			                        	var suc = data.code;
+			                            if(suc==200){
+			                                obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+			                                layer.close(index);
+			                                console.log(index);
+			                                layer.msg("删除成功",{icon:1});
+			                            }
+			                            else{
+			                                layer.msg("删除失败",{icon:5});
+			                            }
+			                        }
+			                    });
+			                    layer.close(index); 
+			                     });
+			      } else if(layEvent === 'edit'){ //编辑
+				        console.log(data);
+			      $("#id").val(data.id);
+						layer.open({
+                            type: 1,
+                            area: ['500px', '400px'],
+                            title: "更改信息",
+                            fixed: false, //不固定
+                            maxmin: true,
+                            maxmin: false,
+                            shadeClose:false,
+                            content: $('#editform')
+                          });
+                          //表单值
+                          form.val("formTest",{
+                            "id":data.id,
+                            "pname":data.pname,
+                            "price":data.price,
+                            "ptitle":data.ptitle,
+                            "pv":data.pv,
+                            "typeid":data.typeid,
+                         });
+       
+        }
+			    });
+		});
+</script>
+</body>
+</html>

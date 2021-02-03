@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
+  <display-name>XXX</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <servlet>
+  		<servlet-name>adminLogin</servlet-name>
+  		<servlet-class>com.lanou.servlet.AdminLoginServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  		<servlet-name>adminLogin</servlet-name>
+  		<url-pattern>/adminLogin</url-pattern>
+  </servlet-mapping>
+   <servlet>
+  		<servlet-name>adminList</servlet-name>
+  		<servlet-class>com.lanou.servlet.AdminServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  		<servlet-name>adminList</servlet-name>
+  		<url-pattern>/adminList</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  		<servlet-name>userList</servlet-name>
+  		<servlet-class>com.lanou.servlet.UserServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  		<servlet-name>userList</servlet-name>
+  		<url-pattern>/userList</url-pattern>
+  </servlet-mapping>
+   <servlet>
+  		<servlet-name>typeServlet</servlet-name>
+  		<servlet-class>com.lanou.servlet.TypeServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  		<servlet-name>typeServlet</servlet-name>
+  		<url-pattern>/typeServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  		<servlet-name>LunboServlet</servlet-name>
+  		<servlet-class>com.lanou.servlet.LunboServlet</servlet-class>
+  		<multipart-config>
+         <max-file-size>10485760</max-file-size>
+         <max-request-size>20971520</max-request-size>
+         <file-size-threshold>5242880</file-size-threshold>
+   		</multipart-config>
+  </servlet>
+  <servlet-mapping>
+  		<servlet-name>LunboServlet</servlet-name>
+  		<url-pattern>/LunboServlet</url-pattern>
+  </servlet-mapping>
+  
+   <servlet>
+  		<servlet-name>productList</servlet-name>
+  		<servlet-class>com.lanou.servlet.ProductServlet</servlet-class>
+  		<multipart-config>
+         <max-file-size>10485760</max-file-size>
+         <max-request-size>20971520</max-request-size>
+         <file-size-threshold>5242880</file-size-threshold>
+   		</multipart-config>
+  </servlet>
+  <servlet-mapping>
+  		<servlet-name>productList</servlet-name>
+  		<url-pattern>/productList</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  		<servlet-name>UserLoginServlet</servlet-name>
+  		<servlet-class>com.lanou.servlet.UserLoginServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  		<servlet-name>UserLoginServlet</servlet-name>
+  		<url-pattern>/UserLoginServlet</url-pattern>
+  </servlet-mapping>
+   <servlet>
+  		<servlet-name>userType</servlet-name>
+  		<servlet-class>com.lanou.servlet.UserThreeServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  		<servlet-name>userType</servlet-name>
+  		<url-pattern>/userType</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  		<servlet-name>userTypeServlet</servlet-name>
+  		<servlet-class>com.lanou.servlet.UserTypeServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  		<servlet-name>userTypeServlet</servlet-name>
+  		<url-pattern>/userTypeServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  		<servlet-name>userLunboServlet</servlet-name>
+  		<servlet-class>com.lanou.servlet.UserLunboServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  		<servlet-name>userLunboServlet</servlet-name>
+  		<url-pattern>/userLunboServlet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  		<servlet-name>cartServlet</servlet-name>
+  		<servlet-class>com.lanou.servlet.CartServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  		<servlet-name>cartServlet</servlet-name>
+  		<url-pattern>/cartServlet</url-pattern>
+  </servlet-mapping>
+  
+   <servlet>
+  		<servlet-name>DetailServlet</servlet-name>
+  		<servlet-class>com.lanou.servlet.DetailServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  		<servlet-name>DetailServlet</servlet-name>
+  		<url-pattern>/DetailServlet</url-pattern>
+  </servlet-mapping>
+  
+  
+  
+  
+  
+  
+  
+   <filter>
+  		<filter-name>encoding</filter-name>
+  		<filter-class>com.lanou.filter.Encoding</filter-class>
+  </filter>
+  <filter-mapping>
+  		<filter-name>encoding</filter-name>
+  		<url-pattern>/*</url-pattern>		
+  </filter-mapping>
+
+  
+</web-app>
