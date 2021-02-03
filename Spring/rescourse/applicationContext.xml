@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="adm" class="cao.lanou.bean.Admin">
+	<property name="pwd" value="666"></property>
+	
+	<property name="hobbys">
+		<list>
+			<value>篮球</value>
+			<value>散步</value>
+		</list>
+	</property>
+	
+	<property name="maps">
+		<map>
+			<entry key="123" value="hahah"></entry>
+			<entry key="111" value="噢噢噢噢"></entry>
+		</map>
+	</property>
+	</bean>
+	
+	
+	<bean id="adminService" class="com.lanou.service.AdminServiceImpl" init-method="init" autowire="byName">
+		<!-- <property name="dao" ref="adminDao"></property>	 -->
+	</bean>
+	 <bean id="dao" class="com.lanou.dao.AdminDaoImpl"> 
+	<!-- <bean id="adminDao" class="com.lanou.dao.AdminDaoImpl"> -->
+	</bean>
+
+
+</beans>
